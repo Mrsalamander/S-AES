@@ -1,4 +1,4 @@
-public class AESEncryptCreator {
+public class AESDecryptCreator {
 
     private int[] p; // 明文
     private int[] key; // 密钥
@@ -22,7 +22,7 @@ public class AESEncryptCreator {
     public int[][] SBox; // S盒
     public int[][] SBoxVerse; // 逆S盒
 
-    public AESEncryptCreator(String PIn, String KeyIn) {
+    public AESDecryptCreator(String PIn, String KeyIn) {
         if (KeyIn.length() == 32) {
             this.isDoubleEncryption = true;
         }

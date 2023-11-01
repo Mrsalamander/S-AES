@@ -1,29 +1,28 @@
-public class AESDecryptCreator {
+public class AESEncryptCreator {
 
-    private int[] p;
-    private int[] key;
+    private int[] p; // 明文
+    private int[] key; // 密钥
 
+    // 半字节数
     private int HalfByteNum;
-    private int[] stateHalfByte;
-    private int[] keyHalfByte;
+    private int[] stateHalfByte; // 明文的半字节表示
+    private int[] keyHalfByte; // 密钥的半字节表示
     private int[] keyHalfByte1;
     private int[] keyHalfByte2;
     private int[] keyHalfByte3;
-    private int[] keyByte1;
+    private int[] keyByte1; // 密钥的字节表示
     private int[] keyByte2;
     private int[] keyByte3;
 
-    private boolean pinIsAscii = false;
-    private boolean keyIsAscii = false;
+    private boolean pinIsAscii = false; // 明文是否为ASCII码
+    private boolean keyIsAscii = false; // 密钥是否为ASCII码
 
-    private boolean isDoubleEncryption = false;
-    // private int[][] stateHalfByteMatrix;
-    // private int[][] keyByteMatrix;
+    private boolean isDoubleEncryption = false; // 是否使用双重加密
 
-    public int[][] SBox;
-    public int[][] SBoxVerse;
+    public int[][] SBox; // S盒
+    public int[][] SBoxVerse; // 逆S盒
 
-    AESDecryptCreator(String PIn, String KeyIn) {
+    public AESEncryptCreator(String PIn, String KeyIn) {
         if (KeyIn.length() == 32) {
             this.isDoubleEncryption = true;
         }
@@ -34,7 +33,7 @@ public class AESDecryptCreator {
         this.stateHalfByte = new int[HalfByteNum];
         this.keyHalfByte = new int[HalfByteNum];
 
-        // 判断pIn是否为ascii
+        // 判断PIn是否为ASCII码
         if (PIn.length() == 2) {
             this.pinIsAscii = true;
         }
@@ -42,7 +41,7 @@ public class AESDecryptCreator {
             if (PIn.charAt(i) != '0' && PIn.charAt(i) != '1')
                 this.pinIsAscii = true;
         }
-        // 判断keyIn是否为ascii
+        // 判断KeyIn是否为ASCII码
         if (KeyIn.length() == 2) {
             this.keyIsAscii = true;
         }

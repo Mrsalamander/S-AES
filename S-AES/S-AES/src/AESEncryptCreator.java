@@ -1,29 +1,28 @@
 public class AESEncryptCreator {
 
-    private int[] p;
-    private int[] key;
+    private int[] p; // æ˜æ–‡
+    private int[] key; // å¯†é’¥
 
+    // åŠå­—èŠ‚æ•°
     private int HalfByteNum;
-    private int[] stateHalfByte;
-    private int[] keyHalfByte;
+    private int[] stateHalfByte; // æ˜æ–‡çš„åŠå­—èŠ‚è¡¨ç¤º
+    private int[] keyHalfByte; // å¯†é’¥çš„åŠå­—èŠ‚è¡¨ç¤º
     private int[] keyHalfByte1;
     private int[] keyHalfByte2;
     private int[] keyHalfByte3;
-    private int[] keyByte1;
+    private int[] keyByte1; // å¯†é’¥çš„å­—èŠ‚è¡¨ç¤º
     private int[] keyByte2;
     private int[] keyByte3;
 
-    private boolean pinIsAscii = false;
-    private boolean keyIsAscii = false;
+    private boolean pinIsAscii = false; // æ˜æ–‡æ˜¯å¦ä¸ºASCIIç 
+    private boolean keyIsAscii = false; // å¯†é’¥æ˜¯å¦ä¸ºASCIIç 
 
-    private boolean isDoubleEncryption = false;
-    // private int[][] stateHalfByteMatrix;
-    // private int[][] keyByteMatrix;
+    private boolean isDoubleEncryption = false; // æ˜¯å¦ä½¿ç”¨åŒé‡åŠ å¯†
 
-    public int[][] SBox;
-    public int[][] SBoxVerse;
+    public int[][] SBox; // Sç›’
+    public int[][] SBoxVerse; // é€†Sç›’
 
-    AESEncryptCreator(String PIn, String KeyIn) {
+    public AESEncryptCreator(String PIn, String KeyIn) {
         if (KeyIn.length() == 32) {
             this.isDoubleEncryption = true;
         }
@@ -34,7 +33,7 @@ public class AESEncryptCreator {
         this.stateHalfByte = new int[HalfByteNum];
         this.keyHalfByte = new int[HalfByteNum];
 
-        // ÅĞ¶ÏpInÊÇ·ñÎªascii
+        // åˆ¤æ–­PInæ˜¯å¦ä¸ºASCIIç 
         if (PIn.length() == 2) {
             this.pinIsAscii = true;
         }
@@ -42,7 +41,7 @@ public class AESEncryptCreator {
             if (PIn.charAt(i) != '0' && PIn.charAt(i) != '1')
                 this.pinIsAscii = true;
         }
-        // ÅĞ¶ÏkeyInÊÇ·ñÎªascii
+        // åˆ¤æ–­KeyInæ˜¯å¦ä¸ºASCIIç 
         if (KeyIn.length() == 2) {
             this.keyIsAscii = true;
         }
@@ -54,14 +53,14 @@ public class AESEncryptCreator {
         if (this.pinIsAscii) {
             for (int i = 0; i < PIn.length(); i++) {
                 char c = PIn.charAt(i);
-                int asciiValue = (int) c; // ½«ASCIIÂë×Ö·û×ª»»Îª¶ÔÓ¦µÄÕûÊıÖµ
+                int asciiValue = (int) c; // å°†ASCIIç å­—ç¬¦è½¬æ¢ä¸ºå¯¹åº”çš„æ•´æ•°å€¼
 
                 for (int j = 0; j < 8; j++) {
-                    this.p[i * 8 + j] = (asciiValue >> (7 - j)) & 1; // ½«¶ş½øÖÆÊı´æÈëintÊı×é
+                    this.p[i * 8 + j] = (asciiValue >> (7 - j)) & 1; // å°†äºŒè¿›åˆ¶æ•°å­˜å…¥intæ•°ç»„
                 }
             }
         }
-        // 16bit×Ö·û´®×ªintÊı×é
+        // 16bitå­—ç¬¦ä¸²è½¬intæ•°ç»„
         else if (!this.pinIsAscii) {
 
             int j = 0;
@@ -76,10 +75,10 @@ public class AESEncryptCreator {
         if (this.keyIsAscii) {
             for (int i = 0; i < KeyIn.length(); i++) {
                 char c = KeyIn.charAt(i);
-                int asciiValue = (int) c; // ½«ASCIIÂë×Ö·û×ª»»Îª¶ÔÓ¦µÄÕûÊıÖµ
+                int asciiValue = (int) c; // å°†ASCIIç å­—ç¬¦è½¬æ¢ä¸ºå¯¹åº”çš„æ•´æ•°å€¼
 
                 for (int j = 0; j < 8; j++) {
-                    this.key[i * 8 + j] = (asciiValue >> (7 - j)) & 1; // ½«¶ş½øÖÆÊı´æÈëintÊı×é
+                    this.key[i * 8 + j] = (asciiValue >> (7 - j)) & 1; // å°†äºŒè¿›åˆ¶æ•°å­˜å…¥intæ•°ç»„
                 }
             }
         } else if (!this.pinIsAscii) {
@@ -106,17 +105,17 @@ public class AESEncryptCreator {
                 { 9, 4, 10, 11 },
                 { 13, 1, 8, 5 },
                 { 6, 2, 0, 3 },
-                { 12, 14, 15, 7 } }; // ²»±Ø¹æ¶¨´óĞ¡
+                { 12, 14, 15, 7 } }; // ä¸å¿…è§„å®šå¤§å°
         this.SBoxVerse = new int[][] {
                 { 10, 5, 9, 11 },
                 { 1, 7, 8, 15 },
                 { 6, 0, 2, 3 },
-                { 12, 4, 13, 14 } }; // ????ÕÇ??§³
+                { 12, 4, 13, 14 } }; // ????æ¶¨??Ğ¡
     }
 
     public String encrypt() {
 
-        // ½«16Î»×ªÎª°ë×Ö½Ú±íÊ¾
+        // å°†16ä½è½¬ä¸ºåŠå­—èŠ‚è¡¨ç¤º
         int j = 0;
         for (int i = 0; i < 16; i += 4) {
             int value = this.p[i] * 8 + this.p[i + 1] * 4 + this.p[i + 2] * 2 + this.p[i + 3] * 1;
@@ -157,9 +156,9 @@ public class AESEncryptCreator {
 
         return result;
     }
-    //ÔİÎ´ÊµÏÖË«ÖØ½âÃÜ
+    //æš‚æœªå®ç°åŒé‡è§£å¯†
     public String decrypt() {
-        // ½«16Î»×ªÎª°ë×Ö½Ú±íÊ¾
+        // å°†16ä½è½¬ä¸ºåŠå­—èŠ‚è¡¨ç¤º
         int j = 0;
         for (int i = 0; i < 16; i += 4) {
             int value = this.p[i] * 8 + this.p[i + 1] * 4 + this.p[i + 2] * 2 + this.p[i + 3] * 1;
@@ -221,39 +220,39 @@ public class AESEncryptCreator {
     }
 
     public void OneTimeEncryption() {
-        // ³õÊ¼ÃÜÔ¿¼Ó
+        // åˆå§‹å¯†é’¥åŠ 
         roundTransformation(this.keyHalfByte1);
-        // °ë×Ö½Ú´úÌæ
+        // åŠå­—èŠ‚ä»£æ›¿
         SubBytes();
-        // ĞĞÎ»ÒÆ
+        // è¡Œä½ç§»
         ShiftRows();
         // }
-        // ÁĞ»ìÏı
+        // åˆ—æ··æ·†
         MixColumns();
 
-        // ÂÖÃÜÏà¼Ó
+        // è½®å¯†ç›¸åŠ 
         roundTransformation(this.keyHalfByte2);
 
-        // °ë×Ö½Ú´úÌæ
+        // åŠå­—èŠ‚ä»£æ›¿
         SubBytes();
-        // ĞĞÎ»ÒÆ
+        // è¡Œä½ç§»
         ShiftRows();
-        // ÂÖÃÜÏà¼Ó
+        // è½®å¯†ç›¸åŠ 
         roundTransformation(this.keyHalfByte3);
     }
 
     public void OneTimeDecryption() {
         roundTransformation(this.keyHalfByte3);
-        // ??¦Ë??
+        // ??Î»??
         ShiftRows();
         // ????????
         SubBytesVerse();
 
         // ???????
         roundTransformation(this.keyHalfByte2);
-        // ?§İ???
+        // ?Ğ»???
         MixColumnsVerse();
-        // ??¦Ë??
+        // ??Î»??
         ShiftRows();
         // ????????
         SubBytesVerse();
@@ -261,7 +260,7 @@ public class AESEncryptCreator {
         roundTransformation(this.keyHalfByte1);
     }
 
-    // ³õÊ¼ÃÜÔ¿¼Ó
+    // åˆå§‹å¯†é’¥åŠ 
     public void roundTransformation(int[] key1) {
         int[] key = new int[key1.length];
         System.arraycopy(key1, 0, key, 0, key1.length);
@@ -276,7 +275,7 @@ public class AESEncryptCreator {
 
     }
 
-    // °ë×Ö½Ú´úÌæ
+    // åŠå­—èŠ‚ä»£æ›¿
     public void SubBytes() {
         int[] stateHalfByteForSBox = new int[this.stateHalfByte.length];
         System.arraycopy(this.stateHalfByte, 0, stateHalfByteForSBox, 0, this.stateHalfByte.length);
@@ -300,7 +299,7 @@ public class AESEncryptCreator {
         this.stateHalfByte[3] = rowSwapTemp;
     }
 
-    public int[] DtoB(int D) {// Ê®½øÖÆÕûÊı±äËÄÎ»¶ş½øÖÆÊı×é
+    public int[] DtoB(int D) {// åè¿›åˆ¶æ•´æ•°å˜å››ä½äºŒè¿›åˆ¶æ•°ç»„
         int originalD = D; // ???????? D ?
 
         int[] binaryForSBox = new int[4];
@@ -316,15 +315,15 @@ public class AESEncryptCreator {
         binaryForSBox[3] = D / 1;
         D = D % 1;
 
-        // ??? originalD ???§Ü?????????????? D ?????
+        // ??? originalD ???Ğº?????????????? D ?????
         return binaryForSBox;
     }
 
-    // ÁĞ»ìÏı
+    // åˆ—æ··æ·†
     public void MixColumns() {
 
         int[] result = new int[4];
-        // ¼ÓÊÇÒì»ò
+        // åŠ æ˜¯å¼‚æˆ–
         result[0] = this.stateHalfByte[0] ^ mutiply4(this.stateHalfByte[1]);
         result[1] = this.stateHalfByte[1] ^ mutiply4(this.stateHalfByte[0]);
         result[2] = mutiply4(this.stateHalfByte[3]) ^ this.stateHalfByte[2];
@@ -364,7 +363,7 @@ public class AESEncryptCreator {
 
         int[] hb = new int[4];
 
-        int temp = b[0];// 8Î»»»³É2¸ö4Î»
+        int temp = b[0];// 8ä½æ¢æˆ2ä¸ª4ä½
         hb[0] = temp / 16;
         b[0] = temp % 16;
         hb[1] = b[0] / 1;
